@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Recovery Systems - Advanced Metallurgical Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .glass-card:hover::before {
+            left: 100%;
+        }
+        
+        .glass-card:hover {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: #3b82f6;
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.2);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .process-flow {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem;
+            scroll-behavior: smooth;
+        }
+        
+        .flow-step {
+            min-width: 200px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid rgba(148, 163, 184, 0.3);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            position: relative;
+            animation: slideIn 0.6s ease-out forwards;
+        }
+        
+        .flow-step:nth-child(1) { animation-delay: 0s; }
+        .flow-step:nth-child(2) { animation-delay: 0.1s; }
+        .flow-step:nth-child(3) { animation-delay: 0.2s; }
+        .flow-step:nth-child(4) { animation-delay: 0.3s; }
+        .flow-step:nth-child(5) { animation-delay: 0.4s; }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .arrow {
+            font-size: 1.5rem;
+            color: #60a5fa;
+            font-weight: bold;
+            min-width: 40px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .modal-overlay {
+            display: none;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .active-modal { display: flex !important; }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 20px;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #60a5fa;
+            margin: 0.5rem 0;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.5);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 0.7);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            border-radius: 999px;
+            font-size: 0.85rem;
+            margin: 0.35rem 0.25rem;
+            color: #60a5fa;
+        }
+        
+        .advantage-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .advantage-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+        
+        .checkmark {
+            color: #10b981;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header Section -->
+    <header class="sticky top-0 z-40 backdrop-blur-xl bg-slate-950/50 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                    <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+                </div>
+                <h1 class="text-2xl font-bold gradient-text">MRS</h1>
+            </div>
+            <nav class="hidden md:flex gap-8">
+                <button onclick="scrollToSection('processes')" class="text-slate-300 hover:text-blue-400 transition">Processes</button>
+                <button onclick="scrollToSection('detailed')" class="text-slate-300 hover:text-blue-400 transition">Detailed</button>
+                <button onclick="scrollToSection('about')" class="text-slate-300 hover:text-blue-400 transition">About</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="max-w-7xl mx-auto px-6 py-20 md:py-32">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+                <span class="gradient-text">Material Recovery</span><br>Systems
+            </h2>
+            <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-8">
+                Advanced metallurgical and biological processes for sustainable E-waste and ore recycling. Transform waste into valuable resources.
+            </p>
+            <button onclick="scrollToSection('processes')" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition transform hover:scale-105">
+                Explore Processes
+            </button>
+        </div>
+
+        <!-- Overview Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-20">
+            <div class="stat-card">
+                <i data-lucide="leaf" class="w-8 h-8 mx-auto text-green-400 mb-2"></i>
+                <div class="stat-number">6</div>
+                <p class="text-slate-400">Core Processes</p>
+            </div>
+            <div class="stat-card">
+                <i data-lucide="zap" class="w-8 h-8 mx-auto text-yellow-400 mb-2"></i>
+                <div class="stat-number">99.9%</div>
+                <p class="text-slate-400">Purity</p>
+            </div>
+            <div class="stat-card">
+                <i data-lucide="globe" class="w-8 h-8 mx-auto text-cyan-400 mb-2"></i>
+                <div class="stat-number">∞</div>
+                <p class="text-slate-400">Recyclable</p>
+            </div>
+            <div class="stat-card">
+                <i data-lucide="trending-up" class="w-8 h-8 mx-auto text-blue-400 mb-2"></i>
+                <div class="stat-number">↻</div>
+                <p class="text-slate-400">Sustainable</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Processes Section -->
+    <section id="processes" class="max-w-7xl mx-auto px-6 py-20">
+        <h3 class="text-4xl font-bold mb-4 gradient-text">Material Recovery Flow</h3>
+        <p class="text-slate-400 mb-12">Complete journey from waste to pure metals</p>
+
+        <div class="glass-card p-8 rounded-2xl">
+            <div class="process-flow">
+                <div class="flow-step" style="background: linear-gradient(135deg, rgba(100, 200, 255, 0.1) 0%, rgba(100, 200, 255, 0.05) 100%); border-color: rgba(100, 200, 255, 0.4);">
+                    <i data-lucide="trash-2" class="w-8 h-8 mx-auto mb-2 text-red-400"></i>
+                    <div class="font-semibold">Waste Material</div>
+                    <div class="text-xs text-slate-400 mt-1">E-waste / Ore</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="flow-step" style="background: linear-gradient(135deg, rgba(255, 200, 100, 0.1) 0%, rgba(255, 200, 100, 0.05) 100%); border-color: rgba(255, 200, 100, 0.4);">
+                    <i data-lucide="settings" class="w-8 h-8 mx-auto mb-2 text-yellow-400"></i>
+                    <div class="font-semibold">Pre-processing</div>
+                    <div class="text-xs text-slate-400 mt-1">Crush, Grind, Sort</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="flow-step" style="background: linear-gradient(135deg, rgba(255, 100, 100, 0.1) 0%, rgba(255, 100, 100, 0.05) 100%); border-color: rgba(255, 100, 100, 0.4);">
+                    <i data-lucide="flame" class="w-8 h-8 mx-auto mb-2 text-orange-400"></i>
+                    <div class="font-semibold">Processing</div>
+                    <div class="text-xs text-slate-400 mt-1">Pyro/Hydro/Bio</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="flow-step" style="background: linear-gradient(135deg, rgba(100, 255, 150, 0.1) 0%, rgba(100, 255, 150, 0.05) 100%); border-color: rgba(100, 255, 150, 0.4);">
+                    <i data-lucide="shield" class="w-8 h-8 mx-auto mb-2 text-green-400"></i>
+                    <div class="font-semibold">Purification</div>
+                    <div class="text-xs text-slate-400 mt-1">Refine & Polish</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="flow-step" style="background: linear-gradient(135deg, rgba(200, 150, 255, 0.1) 0%, rgba(200, 150, 255, 0.05) 100%); border-color: rgba(200, 150, 255, 0.4);">
+                    <i data-lucide="crown" class="w-8 h-8 mx-auto mb-2 text-purple-400"></i>
+                    <div class="font-semibold">Pure Metals</div>
+                    <div class="text-xs text-slate-400 mt-1">Au, Ag, Cu, REEs</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Cards Grid -->
+    <section class="max-w-7xl mx-auto px-6 py-20">
+        <h3 class="text-4xl font-bold mb-4 gradient-text">Recovery Processes</h3>
+        <p class="text-slate-400 mb-12">Click on any process to view detailed flowchart</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- Pyrometallurgy -->
+            <div class="glass-card p-8 rounded-2xl cursor-pointer group" onclick="showFlow('pyro')">
+                <div class="flex items-center justify-between mb-4">
+                    <i data-lucide="flame" class="w-12 h-12 text-orange-500"></i>
+                    <span class="badge">Method 1</span>
+                </div>
+                <h4 class="text-2xl font-bold mb-2">Pyrometallurgy</h4>
+                <p class="text-slate-400 text-sm mb-4">High-temperature thermal treatment for metal extraction from sulfide ores and E-waste.</p>
+                <div class="advantage-list">
+                    <div class="advantage-item">
+                        <span class="checkmark">✓</span>
+                        <span>Fast process</span>
+                    </div>
+                    <div class="advantage-item">
+                        <span class="checkmark">✓</span>
+                        <span>Large-scale</span>
+                    </div>
+                </div>
+                <div class="mt-6 flex items-center text-blue-400 font-medium text-sm group-hover:underline">
+                    View Details <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                </div>
+            </div>
+
+            <!-- Hydrometallurgy -->
+            <div class="glass-card p-8 rounded-2xl cursor-pointer group" onclick="showFlow('hydro')">
+                <div class="flex items-center justify-between mb-4">
+                    <i data-lucide="droplets" class="w-12 h-12 text-blue-500"></i>
+                    <span class="badge">Method 2</span>
+                </div>
+                <h4 class="text-2xl font-bold mb-2">Hydrometallurgy</h4>
+                <p class="text-slate-400 text-sm mb-4">Aqueous chemical processing involving leaching, filtration, and selective precipitation.</p>
+                <div class="advantage-list">
+                    <div class="advantage-item">
+                        <span class="checkmark">✓</span>
+                        <span>Eco-friendly</span>
+                    </div>
+                    <div class="advantage-item">
+                        <span class="checkmark">✓</span>
+                        <span>Selective</span>
+                    </div>
+                </div>
+                <div class="mt-6 flex items-center text-blue-400 font-medium text-sm group-hover:underline">
+                    View Details <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                </div>
+            </div>
+
+            <!-- Bioleaching -->
+            <div class="glass-card p-8 rounded-2xl cursor-pointer group" onclick="showFlow('bio')">
+                <div class="flex items-center justify-between mb-4">
+                    <i data-lucide="leaf" class="w-12 h-12 text-green-500"></i>
+                    <span class="badge">Method 3</span>
+                </div>
+                <h4 class="text-2xl font-bold mb-2">Bioleaching</h4>
+                <p class="text-slate-400 text-sm mb-4">Eco-friendly microbial action using bacterial cultures to recover metals from low-grade ores.</p>
+                <div class="advantage-list">
+                    <div class="advantage-item">
+                        <span class="checkmark">✓</span>
+                        <span>Sustainable</span>
+                    </div>
+                    <div class="advantage-item">
+                        <span class="checkmark">✓</span>
+                        <span>Low-cost</span>
+                    </div>
+                </div>
+                <div class="mt-6 flex items-center text-blue-400 font-medium text-sm group-hover:underline">
+                    View Details <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                </div>
+            </div>
+
+            <!-- REE Extraction -->
+            <div class="glass-card p-8 rounded-2xl cursor-pointer group" onclick="showFlow('ree')">
+                <div class="flex items-center justify-between mb-4">
+                    <i data-lucide="layers" class="w-12 h-12 text-purple-500"></i>
+                    <span class="badge">Method 4</span>
+                </div>
+                <h4 class="text-2xl font-bold mb-2">REE Extraction</h4>
+                <p class="text-slate-400 text-sm mb-4">Specialized recovery of Rare Earth Elements from Monazite, Bastnäsite, and E-waste.</p>
+                <div class="advantage-list">
+                    <div class="advantage-item">
+                        <span class="checkmark">✓</span>
+                        <span>Valuable</span>
+                    </div>
+                    <div class="advantage-item">
+                        <span class="checkmark">✓</span>
+                        <span>Specialized</span>
+                    </div>
+                </div>
+                <div class="mt-6 flex items-center text-blue-400 font-medium text-sm group-hover:underline">
+                    View Details <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                </div>
+            </div>
+
+            <!-- Purification -->
+            <div class="glass-card p-8 rounded-2xl cursor-pointer group" onclick="showFlow('refining')">
+                <div class="flex items-center justify-between mb-4">
+                    <i data-lucide="gem" class="w-12 h-12 text-yellow-500"></i>
+                    <span class="badge">Method 5</span>
+                </div>
+                <h4 class="text-2xl font-bold mb-2">Purification</h4>
+                <p class="text-slate-400 text-sm mb-4">Advanced electrowinning and solvent extraction for producing 99.9% pure metals.</p>
+                <div class="advantage-list">
+                    <div class="advantage-item">
+                        <span class="checkmark">✓</span>
+                        <span>Ultra-pure</span>
+                    </div>
+                    <div class="advantage-item">
+                        <span class="checkmark">✓</span>
+                        <span>Advanced</span>
+                    </div>
+                </div>
+                <div class="mt-6 flex items-center text-blue-400 font-medium text-sm group-hover:underline">
+                    View Details <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                </div>
+            </div>
+
+            <!-- Direct Recycling -->
+            <div class="glass-card p-8 rounded-2xl cursor-pointer group" onclick="showFlow('direct')">
+                <div class="flex items-center justify-between mb-4">
+                    <i data-lucide="refresh-cw" class="w-12 h-12 text-cyan-500"></i>
+                    <span class="badge">Method 6</span>
+                </div>
+                <h4 class="text-2xl font-bold mb-2">Direct Recycling</h4>
+                <p class="text-slate-400 text-sm mb-4">Regeneration of active materials from spent Li-ion batteries via calcination.</p>
+                <div class="advantage-list">
+                    <div class="advantage-item">
+                        <span class="checkmark">✓</span>
+                        <span>Efficient</span>
+                    </div>
+                    <div class="advantage-item">
+                        <span class="checkmark">✓</span>
+                        <span>Fast</span>
+                    </div>
+                </div>
+                <div class="mt-6 flex items-center text-blue-400 font-medium text-sm group-hover:underline">
+                    View Details <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Detailed Comparison Section -->
+    <section id="detailed" class="max-w-7xl mx-auto px-6 py-20">
+        <h3 class="text-4xl font-bold mb-4 gradient-text">Process Comparison</h3>
+        <p class="text-slate-400 mb-12">Key characteristics of each recovery method</p>
+
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="border-b border-slate-700">
+                        <th class="text-left py-4 px-6 text-slate-300">Process</th>
+                        <th class="text-left py-4 px-6 text-slate-300">Temperature</th>
+                        <th class="text-left py-4 px-6 text-slate-300">Speed</th>
+                        <th class="text-left py-4 px-6 text-slate-300">Cost</th>
+                        <th class="text-left py-4 px-6 text-slate-300">Purity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-slate-800 hover:bg-slate-800/30 transition">
+                        <td class="py-4 px-6 font-semibold">Pyrometallurgy</td>
+                        <td class="py-4 px-6"><span class="badge">500-1450°C</span></td>
+                        <td class="py-4 px-6"><span class="text-green-400">Very Fast</span></td>
+                        <td class="py-4 px-6"><span class="text-orange-400">High</span></td>
+                        <td class="py-4 px-6"><span class="text-blue-400">95%+</span></td>
+                    </tr>
+                    <tr class="border-b border-slate-800 hover:bg-slate-800/30 transition">
+                        <td class="py-4 px-6 font-semibold">Hydrometallurgy</td>
+                        <td class="py-4 px-6"><span class="badge">Room Temp</span></td>
+                        <td class="py-4 px-6"><span class="text-yellow-400">Slow</span></td>
+                        <td class="py-4 px-6"><span class="text-green-400">Low</span></td>
+                        <td class="py-4 px-6"><span class="text-blue-400">99%+</span></td>
+                    </tr>
+                    <tr class="border-b border-slate-800 hover:bg-slate-800/30 transition">
+                        <td class="py-4 px-6 font-semibold">Bioleaching</td>
+                        <td class="py-4 px-6"><span class="badge">30-45°C</span></td>
+                        <td class="py-4 px-6"><span class="text-yellow-400">Very Slow</span></td>
+                        <td class="py-4 px-6"><span class="text-green-400">Very Low</span></td>
+                        <td class="py-4 px-6"><span class="text-blue-400">85%+</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="about" class="max-w-7xl mx-auto px-6 py-20">
+        <h3 class="text-4xl font-bold mb-12 gradient-text">Why Choose MRS?</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass-card p-8 rounded-2xl">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                        <i data-lucide="leaf" class="w-6 h-6 text-green-400"></i>
+                    </div>
+                    <h4 class="text-xl font-bold">Sustainable</h4>
+                </div>
+                <p class="text-slate-400">Eco-friendly processes that minimize environmental impact while maximizing resource recovery.</p>
+            </div>
+
+            <div class="glass-card p-8 rounded-2xl">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                        <i data-lucide="zap" class="w-6 h-6 text-blue-400"></i>
+                    </div>
+                    <h4 class="text-xl font-bold">High Purity</h4>
+                </div>
+                <p class="text-slate-400">Achieve 99.9% purity metals suitable for electronics and high-end industrial applications.</p>
+            </div>
+
+            <div class="glass-card p-8 rounded-2xl">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                        <i data-lucide="trending-up" class="w-6 h-6 text-purple-400"></i>
+                    </div>
+                    <h4 class="text-xl font-bold">Cost Effective</h4>
+                </div>
+                <p class="text-slate-400">Optimized processes reduce operational costs while maintaining quality standards.</p>
+            </div>
+
+            <div class="glass-card p-8 rounded-2xl">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center">
+                        <i data-lucide="lightbulb" class="w-6 h-6 text-cyan-400"></i>
+                    </div>
+                    <h4 class="text-xl font-bold">Innovative</h4>
+                </div>
+                <p class="text-slate-400">Cutting-edge technologies combining traditional and bio-based recovery methods.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950/50 mt-20">
+        <div class="max-w-7xl mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h5 class="font-bold mb-3">Products</h5>
+                    <ul class="space-y-2 text-slate-400 text-sm">
+                        <li><a href="#" class="hover:text-blue-400 transition">Pyrometallurgy</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition">Hydrometallurgy</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition">Bioleaching</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-3">Resources</h5>
+                    <ul class="space-y-2 text-slate-400 text-sm">
+                        <li><a href="#" class="hover:text-blue-400 transition">Documentation</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition">Case Studies</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-3">Company</h5>
+                    <ul class="space-y-2 text-slate-400 text-sm">
+                        <li><a href="#" class="hover:text-blue-400 transition">About Us</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition">Contact</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-3">Legal</h5>
+                    <ul class="space-y-2 text-slate-400 text-sm">
+                        <li><a href="#" class="hover:text-blue-400 transition">Privacy</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition">Terms</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition">License</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 pt-8 flex items-center justify-between text-slate-400 text-sm">
+                <p>&copy; 2024 Material Recovery Systems. All rights reserved.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="hover:text-blue-400 transition">Twitter</a>
+                    <a href="#" class="hover:text-blue-400 transition">LinkedIn</a>
+                    <a href="#" class="hover:text-blue-400 transition">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="modal-overlay" onclick="closeFlow()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="p-6 border-b border-slate-700 flex justify-between items-center">
+                <h2 id="modalTitle" class="text-3xl font-bold gradient-text">Flowchart</h2>
+                <button onclick="closeFlow()" class="p-2 hover:bg-slate-800 rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-auto p-8 flex items-center justify-center">
+                <div id="flowchartImg" class="max-w-full h-auto rounded-xl"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const flowchartImg = document.getElementById('flowchartImg');
+
+        const flowData = {
+            'pyro': { 
+                title: 'Pyrometallurgy Process', 
+                svg: `<svg viewBox="0 0 800 600" class="w-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <style>
+                            .flow-box { fill: #fcd34d; stroke: #b45309; stroke-width: 3; }
+                            .flow-text { font-size: 16px; font-weight: bold; text-anchor: middle; fill: #78350f; }
+                            .flow-label { font-size: 13px; text-anchor: middle; fill: #92400e; }
+                            .arrow { stroke: #b45309; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+                            .title { font-size: 24px; font-weight: bold; fill: #1f2937; }
+                        </style>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#b45309" />
+                        </marker>
+                    </defs>
+                    <text x="400" y="30" class="title">Pyrometallurgy Process (High Temperature)</text>
+                    <rect x="250" y="60" width="300" height="70" class="flow-box" rx="10"/>
+                    <text x="400" y="95" class="flow-text">Raw Material</text>
+                    <text x="400" y="120" class="flow-label">Sulfide Ore, E-waste</text>
+                    <path d="M 400 130 L 400 170" class="arrow"/>
+                    <rect x="250" y="170" width="300" height="70" class="flow-box" rx="10"/>
+                    <text x="400" y="205" class="flow-text">Pre-processing</text>
+                    <text x="400" y="230" class="flow-label">Crushing, Grinding, Sorting</text>
+                    <path d="M 400 240 L 400 280" class="arrow"/>
+                    <rect x="150" y="280" width="250" height="80" class="flow-box" rx="10" style="fill: #fed7aa;"/>
+                    <text x="275" y="320" class="flow-text">Roasting</text>
+                    <text x="275" y="340" class="flow-label">500-800°C</text>
+                    <path d="M 275 360 L 275 400" class="arrow"/>
+                    <rect x="150" y="400" width="250" height="80" class="flow-box" rx="10" style="fill: #fed7aa;"/>
+                    <text x="275" y="440" class="flow-text">Smelting</text>
+                    <text x="275" y="460" class="flow-label">1200-1450°C</text>
+                    <path d="M 400 360 L 520 360 L 520 440 L 400 440" class="arrow"/>
+                    <rect x="420" y="400" width="250" height="80" class="flow-box" rx="10" style="fill: #ffedd5;"/>
+                    <text x="545" y="440" class="flow-text">Refining</text>
+                    <text x="545" y="460" class="flow-label">Electrorefining</text>
+                </svg>` 
+            },
+            'hydro': { 
+                title: 'Hydrometallurgy Process', 
+                svg: `<svg viewBox="0 0 800 600" class="w-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <style>
+                            .flow-box { fill: #bfdbfe; stroke: #1e40af; stroke-width: 3; }
+                            .flow-text { font-size: 16px; font-weight: bold; text-anchor: middle; fill: #1e3a8a; }
+                            .flow-label { font-size: 13px; text-anchor: middle; fill: #1e40af; }
+                            .arrow { stroke: #1e40af; stroke-width: 3; fill: none; marker-end: url(#arrowhead2); }
+                            .title { font-size: 24px; font-weight: bold; fill: #1f2937; }
+                        </style>
+                        <marker id="arrowhead2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#1e40af" />
+                        </marker>
+                    </defs>
+                    <text x="400" y="30" class="title">Hydrometallurgy Process (Liquid-based)</text>
+                    <rect x="250" y="60" width="300" height="70" class="flow-box" rx="10"/>
+                    <text x="400" y="95" class="flow-text">Raw Material</text>
+                    <text x="400" y="120" class="flow-label">Metal Ore & E-waste</text>
+                    <path d="M 400 130 L 400 170" class="arrow"/>
+                    <rect x="250" y="170" width="300" height="70" class="flow-box" rx="10"/>
+                    <text x="400" y="205" class="flow-text">Pre-processing</text>
+                    <text x="400" y="230" class="flow-label">Crushing, Grinding, Separated</text>
+                    <path d="M 400 240 L 400 280" class="arrow"/>
+                    <rect x="250" y="280" width="300" height="70" class="flow-box" rx="10" style="fill: #7dd3fc;"/>
+                    <text x="400" y="315" class="flow-text">Leaching</text>
+                    <text x="400" y="335" class="flow-label">Dissolve metals using chemical solutions</text>
+                    <path d="M 400 350 L 400 390" class="arrow"/>
+                    <rect x="250" y="390" width="300" height="70" class="flow-box" rx="10" style="fill: #7dd3fc;"/>
+                    <text x="400" y="425" class="flow-text">Filtration</text>
+                    <text x="400" y="445" class="flow-label">Remove impurities</text>
+                </svg>` 
+            },
+            'bio': { 
+                title: 'Bioleaching Process', 
+                svg: `<svg viewBox="0 0 800 600" class="w-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <style>
+                            .flow-box { fill: #bbf7d0; stroke: #065f46; stroke-width: 3; }
+                            .flow-text { font-size: 16px; font-weight: bold; text-anchor: middle; fill: #064e3b; }
+                            .flow-label { font-size: 13px; text-anchor: middle; fill: #047857; }
+                            .arrow { stroke: #065f46; stroke-width: 3; fill: none; marker-end: url(#arrowhead3); }
+                            .title { font-size: 24px; font-weight: bold; fill: #1f2937; }
+                        </style>
+                        <marker id="arrowhead3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#065f46" />
+                        </marker>
+                    </defs>
+                    <text x="400" y="30" class="title">Bioleaching Process (Biological Method)</text>
+                    <rect x="250" y="60" width="300" height="70" class="flow-box" rx="10"/>
+                    <text x="400" y="95" class="flow-text">Raw Material</text>
+                    <text x="400" y="120" class="flow-label">Low-grade Ore, E-waste</text>
+                    <path d="M 400 130 L 400 170" class="arrow"/>
+                    <rect x="250" y="170" width="300" height="70" class="flow-box" rx="10" style="fill: #a7f3d0;"/>
+                    <text x="400" y="205" class="flow-text">Bacterial Cultures</text>
+                    <text x="400" y="230" class="flow-label">Acidithiobacillus ferrooxidans</text>
+                    <path d="M 400 240 L 400 280" class="arrow"/>
+                    <rect x="250" y="280" width="300" height="70" class="flow-box" rx="10" style="fill: #6ee7b7;"/>
+                    <text x="400" y="315" class="flow-text">Leaching</text>
+                    <text x="400" y="335" class="flow-label">Microbial metal extraction</text>
+                    <path d="M 400 350 L 400 390" class="arrow"/>
+                    <rect x="250" y="390" width="300" height="70" class="flow-box" rx="10" style="fill: #5eead4;"/>
+                    <text x="400" y="425" class="flow-text">Metal Recovery</text>
+                    <text x="400" y="445" class="flow-label">Collect metal ions</text>
+                </svg>` 
+            },
+            'ree': { 
+                title: 'Rare Earth Elements Extraction', 
+                svg: `<svg viewBox="0 0 800 600" class="w-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <style>
+                            .flow-box { fill: #ddd6fe; stroke: #7c3aed; stroke-width: 3; }
+                            .flow-text { font-size: 16px; font-weight: bold; text-anchor: middle; fill: #5b21b6; }
+                            .flow-label { font-size: 13px; text-anchor: middle; fill: #7c3aed; }
+                            .arrow { stroke: #7c3aed; stroke-width: 3; fill: none; marker-end: url(#arrowhead4); }
+                            .title { font-size: 24px; font-weight: bold; fill: #1f2937; }
+                        </style>
+                        <marker id="arrowhead4" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#7c3aed" />
+                        </marker>
+                    </defs>
+                    <text x="400" y="30" class="title">REE Extraction Process</text>
+                    <rect x="250" y="60" width="300" height="70" class="flow-box" rx="10"/>
+                    <text x="400" y="95" class="flow-text">Waste Material</text>
+                    <text x="400" y="120" class="flow-label">E-waste, Monazite, Bastnäsite</text>
+                    <path d="M 400 130 L 400 170" class="arrow"/>
+                    <rect x="250" y="170" width="300" height="70" class="flow-box" rx="10" style="fill: #ede9fe;"/>
+                    <text x="400" y="205" class="flow-text">Leaching</text>
+                    <text x="400" y="230" class="flow-label">Chemical dissolution</text>
+                    <path d="M 400 240 L 400 280" class="arrow"/>
+                    <rect x="150" y="280" width="250" height="70" class="flow-box" rx="10" style="fill: #f3e8ff;"/>
+                    <text x="275" y="315" class="flow-text">Solution Treatment</text>
+                    <text x="275" y="330" class="flow-label">Purify solution</text>
+                    <path d="M 400 280 L 520 280 L 520 315 L 420 315" class="arrow"/>
+                    <rect x="420" y="280" width="250" height="70" class="flow-box" rx="10" style="fill: #f3e8ff;"/>
+                    <text x="545" y="315" class="flow-text">Precipitation</text>
+                    <text x="545" y="330" class="flow-label">Extract REEs</text>
+                </svg>` 
+            },
+            'refining': { 
+                title: 'Purification & Refining', 
+                svg: `<svg viewBox="0 0 900 600" class="w-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <style>
+                            .flow-box { fill: #fef3c7; stroke: #b45309; stroke-width: 3; }
+                            .flow-text { font-size: 14px; font-weight: bold; text-anchor: middle; fill: #78350f; }
+                            .flow-label { font-size: 11px; text-anchor: middle; fill: #92400e; }
+                            .arrow { stroke: #b45309; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead5); }
+                            .title { font-size: 22px; font-weight: bold; fill: #1f2937; }
+                        </style>
+                        <marker id="arrowhead5" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#b45309" />
+                        </marker>
+                    </defs>
+                    <text x="450" y="30" class="title">Purification & Refining Process</text>
+                    <rect x="80" y="60" width="120" height="60" class="flow-box" rx="8"/>
+                    <text x="140" y="90" class="flow-text">Gold (Au)</text>
+                    <path d="M 140 120 L 140 160" class="arrow"/>
+                    <rect x="80" y="160" width="120" height="60" class="flow-box" rx="8" style="fill: #dbeafe;"/>
+                    <text x="140" y="185" class="flow-text">Leaching</text>
+                    <path d="M 140 220 L 140 260" class="arrow"/>
+                    <rect x="80" y="260" width="120" height="60" class="flow-box" rx="8" style="fill: #ecfdf5;"/>
+                    <text x="140" y="290" class="flow-text">Electrowinning</text>
+                    <path d="M 140 320 L 140 360" class="arrow"/>
+                    <rect x="60" y="360" width="160" height="60" class="flow-box" rx="8"/>
+                    <text x="140" y="385" class="flow-text">Pure Gold (Au)</text>
+                    <text x="140" y="405" class="flow-label">99.9% Purity</text>
+                    <rect x="280" y="60" width="120" height="60" class="flow-box" rx="8"/>
+                    <text x="340" y="85" class="flow-text">Silver</text>
+                    <text x="340" y="105" class="flow-label">(Ag)</text>
+                    <path d="M 340 120 L 340 160" class="arrow"/>
+                    <rect x="280" y="160" width="120" height="60" class="flow-box" rx="8" style="fill: #dbeafe;"/>
+                    <text x="340" y="190" class="flow-text">Smelting</text>
+                    <path d="M 340 220 L 340 260" class="arrow"/>
+                    <rect x="280" y="260" width="120" height="60" class="flow-box" rx="8" style="fill: #ecfdf5;"/>
+                    <text x="340" y="290" class="flow-text">Electrowinning</text>
+                    <path d="M 340 320 L 340 360" class="arrow"/>
+                    <rect x="260" y="360" width="160" height="60" class="flow-box" rx="8"/>
+                    <text x="340" y="385" class="flow-text">Pure Silver (Ag)</text>
+                    <text x="340" y="405" class="flow-label">99.9% Purity</text>
+                    <rect x="480" y="60" width="120" height="60" class="flow-box" rx="8"/>
+                    <text x="540" y="85" class="flow-text">Copper</text>
+                    <text x="540" y="105" class="flow-label">(Cu)</text>
+                    <path d="M 540 120 L 540 160" class="arrow"/>
+                    <rect x="480" y="160" width="120" height="60" class="flow-box" rx="8" style="fill: #fed7aa;"/>
+                    <text x="540" y="190" class="flow-text">Smelting</text>
+                    <path d="M 540 220 L 540 260" class="arrow"/>
+                    <rect x="480" y="260" width="120" height="60" class="flow-box" rx="8" style="fill: #ecfdf5;"/>
+                    <text x="540" y="290" class="flow-text">Precipitation</text>
+                    <path d="M 540 320 L 540 360" class="arrow"/>
+                    <rect x="460" y="360" width="160" height="60" class="flow-box" rx="8"/>
+                    <text x="540" y="385" class="flow-text">Pure Copper (Cu)</text>
+                    <text x="540" y="405" class="flow-label">99.9% Purity</text>
+                    <rect x="680" y="60" width="120" height="60" class="flow-box" rx="8"/>
+                    <text x="740" y="90" class="flow-text">REEs</text>
+                    <path d="M 740 120 L 740 160" class="arrow"/>
+                    <rect x="680" y="160" width="120" height="60" class="flow-box" rx="8" style="fill: #ddd6fe;"/>
+                    <text x="740" y="190" class="flow-text">Solvent Extraction</text>
+                    <path d="M 740 220 L 740 260" class="arrow"/>
+                    <rect x="680" y="260" width="120" height="60" class="flow-box" rx="8" style="fill: #ecfdf5;"/>
+                    <text x="740" y="290" class="flow-text">Precipitation</text>
+                    <path d="M 740 320 L 740 360" class="arrow"/>
+                    <rect x="660" y="360" width="160" height="60" class="flow-box" rx="8"/>
+                    <text x="740" y="385" class="flow-text">Pure REEs</text>
+                    <text x="740" y="405" class="flow-label">Mixed Metals</text>
+                    <path d="M 220 390 L 260 390 M 420 390 L 460 390 M 620 390 L 660 390" class="arrow"/>
+                    <rect x="250" y="480" width="400" height="70" class="flow-box" rx="8"/>
+                    <text x="450" y="515" class="flow-text">Final Pure Metals Product</text>
+                    <text x="450" y="535" class="flow-label">Au | Ag | Cu | REEs - Ready for Industry</text>
+                </svg>` 
+            },
+            'direct': { 
+                title: 'Direct Battery Recycling', 
+                svg: `<svg viewBox="0 0 900 600" class="w-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <style>
+                            .flow-box { fill: #f3e8ff; stroke: #7c3aed; stroke-width: 2.5; }
+                            .flow-text { font-size: 14px; font-weight: bold; text-anchor: middle; fill: #5b21b6; }
+                            .flow-label { font-size: 11px; text-anchor: middle; fill: #7c3aed; }
+                            .arrow { stroke: #7c3aed; stroke-width: 2; fill: none; marker-end: url(#arrowhead6); }
+                            .title { font-size: 24px; font-weight: bold; fill: #1f2937; }
+                            .method { font-size: 16px; font-weight: bold; fill: #1f2937; }
+                        </style>
+                        <marker id="arrowhead6" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#7c3aed" />
+                        </marker>
+                    </defs>
+                    <text x="450" y="30" class="title">Direct Battery Recycling Process</text>
+                    <rect x="50" y="70" width="150" height="70" class="flow-box" rx="8"/>
+                    <text x="125" y="110" class="flow-text">Spent Li-ion Battery</text>
+                    <path d="M 200 105 L 250 105" class="arrow"/>
+                    <rect x="250" y="70" width="150" height="70" class="flow-box" rx="8" style="fill: #fcd34d; stroke: #b45309;"/>
+                    <text x="325" y="105" class="flow-text">Disassembly</text>
+                    <text x="325" y="125" class="flow-label">Separate materials</text>
+                    <path d="M 400 105 L 450 105" class="arrow"/>
+                    <text x="480" y="55" class="method" style="fill: #f59e0b;">Pyrometallurgy</text>
+                    <rect x="450" y="70" width="180" height="70" class="flow-box" rx="8" style="fill: #fed7aa; stroke: #b45309;"/>
+                    <text x="540" y="105" class="flow-text">Calcination</text>
+                    <text x="540" y="125" class="flow-label">High temp treatment</text>
+                    <path d="M 630 105 L 680 105" class="arrow"/>
+                    <rect x="680" y="70" width="150" height="70" class="flow-box" rx="8" style="fill: #ecfdf5; stroke: #065f46;"/>
+                    <text x="755" y="105" class="flow-text">Regenerated</text>
+                    <text x="755" y="125" class="flow-label">Active Material</text>
+                    <text x="480" y="200" class="method" style="fill: #0ea5e9;">Hydrometallurgy</text>
+                    <rect x="250" y="220" width="150" height="70" class="flow-box" rx="8" style="fill: #bfdbfe; stroke: #1e40af;"/>
+                    <text x="325" y="260" class="flow-text">Mechanical</text>
+                    <text x="325" y="280" class="flow-label">Pretreatment</text>
+                    <path d="M 400 255 L 450 255" class="arrow"/>
+                    <rect x="450" y="220" width="150" height="70" class="flow-box" rx="8" style="fill: #7dd3fc; stroke: #0369a1;"/>
+                    <text x="525" y="260" class="flow-text">Separation</text>
+                    <path d="M 600 255 L 650 255" class="arrow"/>
+                    <rect x="650" y="220" width="150" height="70" class="flow-box" rx="8" style="fill: #dbeafe; stroke: #1e40af;"/>
+                    <text x="725" y="260" class="flow-text">Precipitation</text>
+                    <path d="M 800 255 L 820 255 L 820 370 L 150 370" class="arrow"/>
+                    <text x="480" y="350" class="method" style="fill: #10b981;">Biotechnology</text>
+                    <rect x="50" y="370" width="150" height="70" class="flow-box" rx="8" style="fill: #bbf7d0; stroke: #065f46;"/>
+                    <text x="125" y="410" class="flow-text">Mechanical</text>
+                    <text x="125" y="430" class="flow-label">Pretreatment</text>
+                    <path d="M 200 405 L 250 405" class="arrow"/>
+                    <rect x="250" y="370" width="150" height="70" class="flow-box" rx="8" style="fill: #a7f3d0; stroke: #047857;"/>
+                    <text x="325" y="410" class="flow-text">Separation</text>
+                    <path d="M 400 405 L 450 405" class="arrow"/>
+                    <rect x="450" y="370" width="150" height="70" class="flow-box" rx="8" style="fill: #6ee7b7; stroke: #059669;"/>
+                    <text x="525" y="410" class="flow-text">Bio Leaching</text>
+                    <path d="M 600 405 L 650 405" class="arrow"/>
+                    <rect x="650" y="370" width="150" height="70" class="flow-box" rx="8" style="fill: #5eead4; stroke: #0d9488;"/>
+                    <text x="725" y="410" class="flow-text">Precipitation</text>
+                </svg>` 
+            }
+        };
+
+        function showFlow(key) {
+            modalTitle.innerText = flowData[key].title;
+            flowchartImg.innerHTML = flowData[key].svg;
+            modal.classList.add('active-modal');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFlow() {
+            modal.classList.remove('active-modal');
+            document.body.style.overflow = 'auto';
+        }
+
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeFlow();
+        });
+    </script>
+</body>
+</html>
